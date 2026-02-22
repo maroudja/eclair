@@ -139,6 +139,23 @@ dist, time = engine.estimate_travel(48.8566, 2.3522, 45.7640, 4.8357)
 print(f"{dist/1000:.0f} km, {time/3600:.1f} hours")
 ```
 
+## Benchmark
+
+Accuracy compared to **OSRM** (car, foot, bike) and **HERE API** (truck, scooter) on random point pairs across France.
+
+| Mode | Metric | Pairs | Mean gap | Median gap | \|Mean\| gap | \|Median\| gap | P90 \|gap\| | P95 \|gap\| |
+|------|--------|------:|----------|------------|-------------|---------------|------------|------------|
+| Car | Time | 5700 | +2.65% | +4.94% | 9.34% | 8.50% | 17.03% | 20.07% |
+| Car | Distance | 5700 | -0.95% | -0.67% | 6.46% | 5.33% | 13.10% | 16.37% |
+| Foot | Time | 2756 | -0.09% | -1.30% | 3.66% | 2.26% | 6.37% | 9.72% |
+| Foot | Distance | 2756 | +1.11% | +3.46% | 5.54% | 4.29% | 7.12% | 8.66% |
+| Bike | Time | 2756 | +0.48% | +0.56% | 2.48% | 1.50% | 5.20% | 7.19% |
+| Bike | Distance | 2756 | +1.75% | +2.99% | 4.22% | 4.05% | 6.76% | 7.79% |
+| Scooter | Time | 5692 | +3.92% | +3.43% | 6.49% | 4.41% | 10.51% | 14.49% |
+| Scooter | Distance | 5692 | +0.87% | +2.01% | 5.88% | 5.13% | 11.26% | 13.90% |
+| Truck | Time | 5700 | +2.89% | +4.66% | 8.21% | 7.55% | 15.28% | 17.82% |
+| Truck | Distance | 5700 | -0.83% | -0.55% | 6.25% | 5.08% | 12.76% | 16.14% |
+
 ## License
 
 Apache 2.0 — see [LICENSE](LICENSE)
