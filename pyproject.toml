@@ -1,0 +1,30 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "eclair-routing"
+version = "0.1.0"
+description = "Efficient and Compact Library for Approximate Instant Routing"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Guillaume Maran" }]
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "polars",
+    "scipy",
+    "optuna",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+python-source = "python"
+module-name = "eclair_routing._eclair"

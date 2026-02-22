@@ -1,0 +1,17 @@
+[package]
+name = "eclair"
+version = "0.1.0"
+edition = "2021"
+description = "Efficient and Compact Library for Approximate Instant Routing"
+license = "Apache-2.0"
+authors = ["Guillaume Maran"]
+
+[lib]
+name = "_eclair"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+pyo3 = { version = "0.28.2", features = ["extension-module"] }
+numpy = "0.28.0"
+h3o = "0.9"
+polars = { version = "0.53.0", default-features = false, features = ["csv", "parquet", "lazy"] }
