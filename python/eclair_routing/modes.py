@@ -33,7 +33,12 @@ MODES: dict[str, ModeConfig] = {
         d_peak_km=2.1068746500018283,
     ),
     "bike": ModeConfig(
-        vmin=10.0, vmax=25.0, k=0.03, f_long=1.15, f_peak=1.35, d_peak_km=3.0
+        vmin=15.815330130265373,
+        vmax=15.595514798630521,
+        k=0.03467149051226458,
+        f_long=1.166832624243892,
+        f_peak=1.0669920596555764,
+        d_peak_km=3.007085888879441,
     ),
     "scooter": ModeConfig(
         vmin=12.0, vmax=60.0, k=0.016, f_long=1.18, f_peak=1.40, d_peak_km=4.0
