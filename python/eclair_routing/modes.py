@@ -44,6 +44,11 @@ MODES: dict[str, ModeConfig] = {
         vmin=12.0, vmax=60.0, k=0.016, f_long=1.18, f_peak=1.40, d_peak_km=4.0
     ),
     "foot": ModeConfig(
-        vmin=4.0, vmax=5.5, k=0.05, f_long=1.10, f_peak=1.25, d_peak_km=2.0
+        vmin=5.613404457360978,
+        vmax=5.435092391667871,
+        k=0.05605399382151624,
+        f_long=1.1575157252964234,
+        f_peak=1.0714537540904385,
+        d_peak_km=1.1556513614627515,
     ),
 }
