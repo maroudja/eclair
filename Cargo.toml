@@ -1,6 +1,6 @@
 [package]
 name = "eclair"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Efficient and Compact Library for Approximate Instant Routing"
 license = "Apache-2.0"
