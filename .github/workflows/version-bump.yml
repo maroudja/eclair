@@ -1,4 +1,4 @@
-name: Version Bump
+name: Version Bump & Publish
 
 on:
   push:
@@ -6,10 +6,13 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
   bump-version:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,7 +22,6 @@ jobs:
       - name: Check if version was manually changed
         id: check
         run: |
-          # Compare pyproject.toml version between HEAD and HEAD~1
           OLD_VERSION=$(git show HEAD~1:pyproject.toml | grep '^version' | head -1 | sed 's/.*"\(.*\)".*/\1/')
           NEW_VERSION=$(grep '^version' pyproject.toml | head -1 | sed 's/.*"\(.*\)".*/\1/')
           if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
@@ -42,10 +44,7 @@ jobs:
 
           echo "Bumping version: $CURRENT -> $NEW_VERSION"
 
-          # Update pyproject.toml
           sed -i "s/^version = \"$CURRENT\"/version = \"$NEW_VERSION\"/" pyproject.toml
-
-          # Update Cargo.toml
           sed -i "s/^version = \"$CURRENT\"/version = \"$NEW_VERSION\"/" Cargo.toml
 
       - name: Commit and tag
@@ -69,3 +68,84 @@ jobs:
             git tag "v$NEW_VERSION"
             git push origin "v$NEW_VERSION"
           fi
+
+      - name: Output version
+        id: version
+        run: |
+          VERSION=$(grep '^version' pyproject.toml | head -1 | sed 's/.*"\(.*\)".*/\1/')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+  build-sdist:
+    needs: [bump-version]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Build sdist
+        uses: PyO3/maturin-action@v1
+        with:
+          command: sdist
+          args: --out dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-sdist
+          path: dist
+
+  build-wheels:
+    needs: [bump-version]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64
+          - os: ubuntu-latest
+            target: aarch64
+          - os: macos-latest
+            target: x86_64
+          - os: macos-latest
+            target: aarch64
+          - os: windows-latest
+            target: x86_64
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Build wheels
+        uses: PyO3/maturin-action@v1
+        with:
+          target: ${{ matrix.target }}
+          args: --release --out dist
+          manylinux: auto
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.os }}-${{ matrix.target }}
+          path: dist
+
+  publish:
+    needs: [build-sdist, build-wheels]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/eclair-routing
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: dist-*
+          path: dist
+          merge-multiple: true
+      - name: Publish to PyPI
+        uses: PyO3/maturin-action@v1
+        with:
+          command: upload
+          args: --non-interactive --skip-existing dist/*
