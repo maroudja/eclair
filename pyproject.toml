@@ -28,3 +28,4 @@ testpaths = ["tests"]
 features = ["pyo3/extension-module"]
 python-source = "python"
 module-name = "eclair_routing._eclair"
+include = ["python/eclair_routing/data/*.parquet"]
