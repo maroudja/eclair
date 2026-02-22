@@ -41,7 +41,12 @@ MODES: dict[str, ModeConfig] = {
         d_peak_km=3.007085888879441,
     ),
     "scooter": ModeConfig(
-        vmin=12.0, vmax=60.0, k=0.016, f_long=1.18, f_peak=1.40, d_peak_km=4.0
+        vmin=13.50447540255183,
+        vmax=55.978549131096585,
+        k=0.022273423423204278,
+        f_long=1.3287380773553794,
+        f_peak=1.2572196411467227,
+        d_peak_km=2.1515598765613206,
     ),
     "foot": ModeConfig(
         vmin=5.613404457360978,
